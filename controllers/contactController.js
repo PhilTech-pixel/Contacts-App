@@ -25,10 +25,19 @@ const addContact = asyncHandler(async (req, res) => {
 const updateContact = asyncHandler(async (req, res) => {
   //await Contact;
   const { name, email, phone } = req.body;
+  const contact = await Contact.findById(req.params.id);
   if (!name || !email || !phone) {
     res.status(400);
     throw new Error("All fields are mandatory");
   }
+
+  if (contact.user_id.toString() !== req.user.id) {
+    res.status(403);
+    throw new Error(
+      "User doesn't have permission to update other users cnotacts"
+    );
+  }
+
   const { id } = req.params;
   const updatedContact = await Contact.findByIdAndUpdate(id, req.body, {
     new: true,
@@ -50,6 +59,13 @@ const getContactById = asyncHandler(async (req, res) => {
 });
 const deleteContact = asyncHandler(async (req, res) => {
   //await Contact;
+  const contact = await Contact.findById(req.params.id);
+  if (contact.user_id.toString() !== req.user.id) {
+    res.status(403);
+    throw new Error(
+      "User doesn't have permission to update other users cnotacts"
+    );
+  }
   const { id } = req.params;
   const deleteContact = await Contact.findByIdAndDelete(id);
   res.status(200).json({ message: "Deleted Contact" });
