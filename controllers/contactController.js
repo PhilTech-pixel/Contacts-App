@@ -23,7 +23,6 @@ const addContact = asyncHandler(async (req, res) => {
   res.status(201).json(contact);
 });
 const updateContact = asyncHandler(async (req, res) => {
-  //await Contact;
   const { name, email, phone } = req.body;
   const contact = await Contact.findById(req.params.id);
   if (!name || !email || !phone) {
@@ -46,8 +45,6 @@ const updateContact = asyncHandler(async (req, res) => {
   res.status(200).json(updatedContact);
 });
 const getContactById = asyncHandler(async (req, res) => {
-  //await Contact;
-
   const { id } = req.params;
   const getContact = await Contact.findById(id);
   if (!getContact) {
@@ -58,7 +55,6 @@ const getContactById = asyncHandler(async (req, res) => {
   res.status(200).json(getContact);
 });
 const deleteContact = asyncHandler(async (req, res) => {
-  //await Contact;
   const contact = await Contact.findById(req.params.id);
   if (contact.user_id.toString() !== req.user.id) {
     res.status(403);
